@@ -1,0 +1,18 @@
+@startuml
+actor Client
+
+Client -> "Global Router (app.js)" : POST /api/v1/pizzas
+"Global Router (app.js)" -> "Pizza Router (routes/pizzas.js)" : Délègue à /pizzas
+"Pizza Router (routes/pizzas.js)" -> "PizzaController (controllers/pizzas.js)" : createPizza(req)
+"PizzaController (controllers/pizzas.js)" -> "MySQL DB" : INSERT INTO pizzas(name, price, category) VALUES(...)
+
+alt Validation error
+    "PizzaController (controllers/pizzas.js)" --> Client : 400 Bad Request + messages d'erreur
+else Success
+    "MySQL DB" --> "PizzaController (controllers/pizzas.js)" : Ack (row inserted)
+    "PizzaController (controllers/pizzas.js)" --> Client : 200 OK + {"success":true,"message":"Pizza created successfully"}
+else Unexpected error
+    "PizzaController (controllers/pizzas.js)" --> Client : 500 Internal Server Error
+end
+
+@enduml

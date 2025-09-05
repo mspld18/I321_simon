@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const pizzaController = require('../controllers/PizzaController');
+const pizzaController = require('../controllers/pizzas');
 
 router.get('/', pizzaController.getAll);
 router.post('/', pizzaController.create);
